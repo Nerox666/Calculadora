@@ -12,8 +12,7 @@ from numpy import False_
 
 PuntuacionVariasTabsOrdenadas  = 0
 PuntuacionVariasTabsDesOrdenadas  = 0
-PuntuacionMultOrdenadas  = 0
-PuntuacionMultDesOrdenadas  = 0
+PuntuacionMult  = 0
 
 def menu():
     os.system("cls")
@@ -22,12 +21,11 @@ def menu():
     print("****************************************************")
     print("**********Seleccione operacion a realizar***********")
     print("****************************************************")
-    print("1. Multiplicar ordenado")
-    print("2. Multiplicar de forma desordenada")
-    print("3. Multiplicación de varias tablas de forma ordenada")
-    print("4. Multiplicación de varias tablas de forma desordenada")
-    print("5. Puntuaciones")
-    print("6. Salir")
+    print("1. Multiplicar normal")
+    print("2. Multiplicación de varias tablas de forma ordenada")
+    print("3. Multiplicación de varias tablas de forma desordenada")
+    print("4. Puntuaciones")
+    print("5. Salir")
 
     print("Elige la operación")
 
@@ -37,135 +35,87 @@ def menu():
         print("introduce una operacion válida")
 
     if op == 1:
-        multordenado()
+        mult()
     elif op == 2:
-        multdesordenado()
-    elif op == 3:
         multvarios()
-    elif op == 4:
+    elif op == 3:
         multvariosrand()
-    elif op == 5:
+    elif op == 4:
         puntuaciones()   
-    elif op == 6:
+    elif op == 5:
         print("Hasta luego !!")
         exit()
     
 
+def resultados(aciertos, errores):
+    print(f'Has tenido {aciertos} aciertos y {errores} errores')
 
-def multordenado():
-    os.system("cls")
+    porcentaje = aciertos/10 * 100
+    print(f"acierto del {porcentaje} " + "%" )
+    input()
+    menu()
+
+   
+def guardarpuntuacion(aciertos, errores, nombrecampo, nombrepuntuacion):
+   json = ""
+   with open("puntuaciones.json" , "w") as fichero:
+         json = json.load(fichero)
+   
+   nombrepuntuacion
+   nombrepuntuacion = aciertos - errores
+   json[nombrecampo] = nombrepuntuacion
+
+def calculo(num1, num2, nombrepuntuacion):
+
     contador = 0
     aciertos = 0
     errores = 0
 
-    print("Cual tabla quieres elegir?")
-    num1 = int(input("introduce el número "))
-    num2 = 1
+    limite = int(input("cuantas multiplicaciones quieres hacer?"))
 
+    while contador != limite:
+            os.system("cls")
+            print(f'Cuanto es {num1} por {num2}:')
 
-    while contador != 10:
-        os.system("cls")
-        print(f'Cuanto es {num1} por {num2}:')
+            try:
+                resultado = int(input("Selecciona tu respuesta "))
+            except ValueError:
+                print("el caracter introducido no es válido")
+            
+            if resultado == num1 * num2:
+                print("Has acertado")
+                input()
+                aciertos = aciertos + 1
+            elif resultado != num1 * num2:
+                print(f"fallaste, el número era: {num1 * num2}")
+                input()
+                errores = errores + 1
+            contador = contador + 1
+            num2 = num2 + 1
 
-        try:
-            resultado = int(input("Selecciona tu respuesta "))
-        except ValueError:
-            print("el caracter introducido no es válido")
-        
-        if resultado == num1 * num2:
-            print("Has acertado")
-            input()
-            aciertos = aciertos + 1
-        elif resultado != num1 * num2:
-            print(f"fallaste, el número era: {num1 * num2}")
-            input()
-            errores = errores + 1
-        contador = contador + 1
-        num2 = num2 + 1
+   # guardarpuntuacion(aciertos, errores, nombrepuntuacion, PuntuacionMultOrdenadas )
+    
+    resultados(aciertos, errores)
 
-  
+def mult():
     os.system("cls")
 
-  #  json = ""
-  #  with open("puntuaciones.json" , "w") as fichero:
-  #        json = json.load(fichero)
-
-  
-  #  global PuntuacionMultOrdenadas
-  #  PuntuacionMultOrdenadas = aciertos - errores
-  #  json["Multiplicaciones ordenadas"] = PuntuacionMultOrdenadas
-    
-    print(f'Has tenido {aciertos} aciertos y {errores} errores')
-
-    porcentaje = aciertos/10 * 100
-    print(f"acierto del {porcentaje} " )
-    input()
-    menu()
+    print("Cual tabla quieres elegir?")
+    num1 = int(input("introduce el número "))
    
 
-def multdesordenado():
-    os.system("cls")
-    contador = 0
-    aciertos = 0
-    errores = 0
+    print('Quieres de forma desordenada? (S/n/N/n) ')
 
-    print("Cual tabla quieres elegir?")
-    num1 = int(input("introduce el número "))
-    
-    while contador != 10:
-        os.system("cls")
+    respuesta = input()
+
+    if respuesta.upper() == "S"  or respuesta.lower() == "s":
         num2 = rd.randint(1,10)
-        print(f'Cuanto es {num1} por {num2}:')
+    elif respuesta.upper() == "N"  or respuesta.lower() == "n":
+        num2 = 1
 
-        try:
-            resultado = int(input("Selecciona tu respuesta "))
-        except:
-            print("el caracter introducido no es válido")
-        
-        if resultado == num1 * num2:
-            print("Has acertado")
-            input()
-            aciertos = aciertos + 1
-        elif resultado != num1 * num2:
-            print(f"fallaste, el número era: {num1 * num2}")
-            input()
-            errores = errores + 1
-        contador = contador + 1
-
-
+    calculo(num1, num2, "Multiplicaciones ordenadas")
 
     os.system("cls")
-    if aciertos > errores:
-        print("Has ganado!!!")
-    else:
-        print("Perdiste!!")
-
-    if aciertos < 4:
-        print("necesitas mejorar")
-    elif aciertos >= 8 and  aciertos < 10:
-        print("un poco mas y lo consigues")
-    elif aciertos == 10:
-        print("has acertado todo!!")
-    else:
-        print("sigue así")
-    
-    print(f'Has tenido {aciertos} aciertos y {errores} errores')
-
-    porcentaje = aciertos/10 * 100
-    print(f"acierto del {porcentaje} " )
-    input()
-    
-
-   # json = ""
-
-    #with open("puntuaciones.json" , "w") as fichero:
-       
-
-  
-  #  global PuntuacionMultDesOrdenadas
-  #  PuntuacionMultDesOrdenadas = aciertos - errores
-  #  json["Multiplicaciones Desordenadas"] = PuntuacionMultDesOrdenadas
-    menu()
 
 def multvarios():
 
@@ -226,19 +176,8 @@ def multvarios():
             
         pos = 1 + pos
 
-    print(f"Has tenido {aciertos} aciertos y {errores} errores! ")
-    
-    porcentaje = aciertos/10 * 100
-    print(f"acierto del {porcentaje} " )
-    input()
-  #  json = ""
-   # with open("puntuaciones.json" , "w") as fichero:
-   #       json = json.loads(fichero)
+    resultados(aciertos, errores)
 
-    
-   # global PuntuacionVariasTabsOrdenadas
-   # PuntuacionVariasTabsOrdenadas = aciertos - errores
-   # json["Multiplicaciones Varias ordenadas"] = PuntuacionVariasTabsOrdenadas
     menu()
 
     
@@ -248,7 +187,7 @@ def multvariosrand():
     aciertos = 0
     errores = 0
 
-    contadorandom = 0
+    contador = 0
     while True:
             try:
                 info = input("Selecciona tablas (separadas por un espacio) ")
@@ -264,12 +203,12 @@ def multvariosrand():
             except BaseException:
                 multvarios()
         
-    cont = len(tab)        
+    contadorTablas = len(tab)        
     pos = 0
     os.system("CLS")    
         
-    while (pos < cont):
-        while (contadorandom < 11):
+    while (pos < contadorTablas):
+        while (contador < 11):
 
             num2 = rd.randint(1,10)
             num1 = tab[pos]
@@ -294,26 +233,15 @@ def multvariosrand():
             else:
                 print(f'\nFallaste, El resultado es: {solucion}\n')
                 errores = 1 + errores
-            contadorandom = contadorandom + 1
+            contador = contador + 1
             
             
-        contadorandom = 0
+        contador = 0
 
         pos = 1 + pos
 
-    print(f"Has tenido {aciertos} aciertos y {errores} errores! ")
+    resultados(aciertos, errores)
 
-    porcentaje = aciertos/10 * 100
-    print(f"acierto del {porcentaje} " )
-    input()
-  #  json = ""
-  #  with open("puntuaciones.json" , "w") as fichero:
-  #        json = json.loads(fichero)
-
-    
-  #  global PuntuacionVariasTabsDesOrdenadas
-  #  PuntuacionVariasTabsDesOrdenadas = aciertos - errores
-  #  json["Multiplicaciones Varias Desordenadas"] = PuntuacionVariasTabsDesOrdenadas
 
      
 
@@ -382,9 +310,6 @@ def puntuaciones():
     print(f"| conocimiento varias tablas desordenadas: {valoracionvariasmultrand}    |")
     print("-----------------------------------------------------------------------------")
 
-    
-
-    
 
     op = input("pulsa r para salir y volver al menú")
     if op.lower() == "r" or op.upper() == "R":
