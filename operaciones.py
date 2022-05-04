@@ -7,11 +7,11 @@ import math as mt
 from time import process_time_ns
 import json
 
-from numpy import False_ 
+from numpy import False_
+from sqlalchemy import false, true 
 
 
-PuntuacionVariasTabsOrdenadas  = 0
-PuntuacionVariasTabsDesOrdenadas  = 0
+PuntuacionVariasTabs = 0
 PuntuacionMult  = 0
 
 def menu():
@@ -22,10 +22,9 @@ def menu():
     print("**********Seleccione operacion a realizar***********")
     print("****************************************************")
     print("1. Multiplicar normal")
-    print("2. Multiplicación de varias tablas de forma ordenada")
-    print("3. Multiplicación de varias tablas de forma desordenada")
-    print("4. Puntuaciones")
-    print("5. Salir")
+    print("2. Multiplicación de varias tablas")
+    print("3. Puntuaciones")
+    print("4. Salir")
 
     print("Elige la operación")
 
@@ -39,10 +38,8 @@ def menu():
     elif op == 2:
         multvarios()
     elif op == 3:
-        multvariosrand()
-    elif op == 4:
         puntuaciones()   
-    elif op == 5:
+    elif op == 4:
         print("Hasta luego !!")
         exit()
     
@@ -54,7 +51,7 @@ def resultados(aciertos, errores):
     print(f"acierto del {porcentaje} " + "%" )
     input()
     menu()
-
+ 
    
 def guardarpuntuacion(aciertos, errores, nombrecampo, nombrepuntuacion):
    json = ""
@@ -97,6 +94,56 @@ def calculo(num1, num2, nombrepuntuacion):
     
     resultados(aciertos, errores)
 
+def calculo_varios(aciertos, errores, contador,contadorTablas, pos, tab, nombrepuntuacion):
+    
+    print("Quieres de forma aleatoria ? (s/S/N/n)")
+    respuesta = input()
+    
+    if respuesta.upper() == "S"  or respuesta.lower() == "s":
+        num2elegidorandom = true
+    elif respuesta.upper() == "N"  or respuesta.lower() == "n":
+        num2elegidorandom = false
+
+    while (pos < contadorTablas):
+        while (contador < 11):
+
+            if num2elegidorandom == true:
+                 num2 = rd.randint(1,10)
+            elif num2elegidorandom == false:
+                 num2 = contador
+
+            num1 = tab[pos]
+            solucion = num1 * num2
+                
+            print(f'Cuanto es : {num1} x {num2} ?')
+                
+            while True:
+                try:
+                    respuesta = int(input("Tu respuesta --> "))
+                    break
+                except ValueError:
+                    print("\nSolo se admiten numeros\n")
+                    print("Pulsa Enter para volver")
+                    input()
+                    os.system("CLS")
+                    print(f'Cuanto es : {num1} x {num2} ?\n')
+                
+            if respuesta == solucion:
+                print("\nAcertaste\n")
+                aciertos = 1 + aciertos
+            else:
+                print(f'\nFallaste, El resultado es: {solucion}\n')
+                errores = 1 + errores
+                
+            contador = 1 + contador
+            
+
+        contador = 0
+            
+        pos = 1 + pos
+
+    resultados(aciertos, errores)
+    # guardarpuntuacion(aciertos, errores, nombrepuntuacion, PuntuacionMultOrdenadas )
 def mult():
     os.system("cls")
 
@@ -122,7 +169,7 @@ def multvarios():
     aciertos = 0
     errores = 0
 
-    br = 0
+    contador = 0
     while True:
             try:
                 info = input("Selecciona tablas (separadas por un espacio) ")
@@ -138,50 +185,12 @@ def multvarios():
             except BaseException:
                 multvarios()
         
-    cont = len(tab)        
+    contadorTablas = len(tab)        
     pos = 0
     os.system("CLS")    
         
-    while (pos < cont):
-        while (br < 11):
+    calculo_varios(aciertos, errores, contador,contadorTablas, pos, tab,"Multiplicaciones Varias")
 
-            num2 = br
-            num1 = tab[pos]
-            solucion = num1 * num2
-                
-            print(f'Cuanto es : {num1} x {num2} ?')
-                
-            while True:
-                try:
-                    respuesta = int(input("Tu respuesta --> "))
-                    break
-                except ValueError:
-                    print("\nSolo se admiten numeros\n")
-                    print("Pulsa Enter para volver")
-                    input()
-                    os.system("CLS")
-                    print(f'Cuanto es : {num1} x {num2} ?\n')
-                
-            if respuesta == solucion:
-                print("\nAcertaste\n")
-                aciertos = 1 + aciertos
-            else:
-                print(f'\nFallaste, El resultado es: {solucion}\n')
-                errores = 1 + errores
-                
-            br = 1 + br
-            
-
-        br = 0
-            
-        pos = 1 + pos
-
-    resultados(aciertos, errores)
-
-    menu()
-
-    
-    
 
 def multvariosrand():
     aciertos = 0
@@ -247,49 +256,27 @@ def multvariosrand():
 
 def puntuaciones():
 
-    valoracionmultord = ""
-    valoracionmultrand = ""
-    valoracionvariasmultord = ""
-    valoracionvariasmultrand = ""
+    valoracionmult = ""
+    valoracionvariasmult= ""
 
     
-    if PuntuacionMultOrdenadas <= 4  :
-        valoracionmultord = "Insuficiente, necesita practicar mucho" 
-    elif PuntuacionMultOrdenadas >= 8 :
-        valoracionmultord = " Bastante bien un poco mas y lo saca"
-    elif PuntuacionMultOrdenadas == 10 :
-        valoracionmultord = "Ha completado todo"
+    if PuntuacionMult <= 4  :
+         valoracionmult = "Insuficiente, necesita practicar mucho" 
+    elif PuntuacionMult >= 8 :
+         valoracionmult = " Bastante bien un poco mas y lo saca"
+    elif PuntuacionMult == 10 :
+         valoracionmult = "Ha completado todo"
     else:
-        valoracionmultord = "bien, sigue así"
-
-    if PuntuacionMultDesOrdenadas <= 4  :
-        valoracionmultrand = "Insuficiente, necesita practicar mucho" 
-    elif PuntuacionMultDesOrdenadas >= 8 :
-        valoracionmultrand = " Bastante bien un poco mas y lo saca"
-    elif PuntuacionMultDesOrdenadas == 10 :
-        valoracionmultrand = "Ha completado todo"
-    else:
-        valoracionmultrand = "bien, sigue así"
-
-
-    if PuntuacionVariasTabsOrdenadas <= 4  :
-        valoracionvariasmultord = "Insuficiente, necesita practicar mucho" 
-    elif PuntuacionVariasTabsOrdenadas >= 8 :
-        valoracionvariasmultord = " Bastante bien un poco mas y lo saca"
-    elif PuntuacionVariasTabsOrdenadas == 10 :
-        valoracionvariasmultord = "Ha completado todo"
-    else:
-        valoracionvariasmultord = "bien, sigue así"
-
+         valoracionmult = "bien, sigue así"
     
-    if PuntuacionVariasTabsDesOrdenadas <= 4  :
-        valoracionvariasmultrand = "Insuficiente, necesita practicar mucho" 
-    elif PuntuacionVariasTabsDesOrdenadas >= 8 :
-        valoracionvariasmultrand = " Bastante bien un poco mas y lo saca"
-    elif PuntuacionVariasTabsDesOrdenadas == 10 :
-        valoracionvariasmultrand = "Ha completado todo"
+    if PuntuacionVariasTabs <= 4  :
+        valoracionvariasmult = "Insuficiente, necesita practicar mucho" 
+    elif PuntuacionVariasTabs >= 8 :
+        valoracionvariasmult = " Bastante bien un poco mas y lo saca"
+    elif PuntuacionVariasTabs == 10 :
+        valoracionvariasmult = "Ha completado todo"
     else:
-        valoracionvariasmultrand = "bien, sigue así"
+        valoracionvariasmult = "bien, sigue así"
 
 
     os.system("cls")
@@ -297,17 +284,13 @@ def puntuaciones():
     print("***************************************************")
     print("*****(es la diferencia entre errores y aciertos)***")
     print("---------------------------------------------------")
-    print(f"| conocimiento multiplicaciones ordenadas:    {PuntuacionMultOrdenadas} |")
-    print(f"| conocimiento multiplicaciones desordenadas: {PuntuacionMultDesOrdenadas} |")
-    print(f"| conocimiento varias tablas ordenadas: {PuntuacionVariasTabsOrdenadas}       |")
-    print(f"| conocimiento varias tablas desordenadas: {PuntuacionMultDesOrdenadas}    |")
+    print(f"| conocimiento multiplicaciones:    {PuntuacionMult} |")
+    print(f"| conocimiento varias tablas: {PuntuacionVariasTabs}|")
     print("---------------------------------------------------")
     print("*******************Valoraciones********************")
     print("----------------------------------------------------------------------------")
-    print(f"| conocimiento multiplicaciones ordenadas: {valoracionmultord} |")
-    print(f"| conocimiento multiplicaciones desordenadas: {valoracionmultrand} |")
-    print(f"| conocimiento varias tablas ordenadas: {valoracionvariasmultord}       |")
-    print(f"| conocimiento varias tablas desordenadas: {valoracionvariasmultrand}    |")
+    print(f"| conocimiento multiplicaciones: {valoracionmult} |")
+    print(f"| conocimiento varias tablas: {valoracionvariasmult}       |")
     print("-----------------------------------------------------------------------------")
 
 
