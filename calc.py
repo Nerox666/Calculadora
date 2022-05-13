@@ -1,66 +1,93 @@
-def calculo_varios(aciertos, errores, contador,contadorTablas, pos, tab, nombrepuntuacion):
-    
-    print("Quieres de forma aleatoria ? (s/S/N/n)")
-    respuesta = input()
-    
-    if respuesta.upper() == "S"  or respuesta.lower() == "s":
-        num2elegidorandom = true
-    elif respuesta.upper() == "N"  or respuesta.lower() == "n":
-        num2elegidorandom = false
+import os
+from operaciones import resultados
+from puntuacion import guardarpuntuacion
+import random as rd
 
-    while (pos < contadorTablas):
-        while (contador < 11):
 
-            if num2elegidorandom == true:
-                 num2 = rd.randint(1,10)
-            elif num2elegidorandom == false:
-                 num2 = contador
+def calculo_varios():
+    aciertos = 0
+    errores = 0
+    nmult = 0
 
-            num1 = tab[pos]
-            solucion = num1 * num2
+    tabList = None
+    while tabList is None:
+            try:
+                tabList = list(map(int,input("Selecciona tablas (separadas por un espacio) ").split(" ")))
+                break           
+            except BaseException:
+                tabList = None
+
+    isRandom = None
+    while  isRandom  is None:
+        try:
+            isRandom = int(input("Quieres random? 1- si 0- no"))
+        except:
+            isRandom = None
+
+    for tab in tabList:
+        limite = None
+        while limite is None:
+            try:
+                limite = int(input("Cuantas multiplicaciones quieres hacer? "))
+            except:
+                limite = None
+        for i in range(1,limite):
+            os.system("CLS") 
+            if isRandom:
+                num2 = rd.randint(1,10)
+            else:
+                num2 = i
+            solucion = tab * num2
                 
-            print(f'Cuanto es : {num1} x {num2} ?')
-                
-            while True:
+            print(f'Cuanto es : {tab} x {num2} ?')
+            
+            respuesta = None
+            while respuesta is None:
                 try:
                     respuesta = int(input("Tu respuesta --> "))
                     break
                 except ValueError:
-                    print("\nSolo se admiten numeros\n")
-                    print("Pulsa Enter para volver")
-                    input()
-                    os.system("CLS")
-                    print(f'Cuanto es : {num1} x {num2} ?\n')
+                    respuesta = None
                 
             if respuesta == solucion:
                 print("\nAcertaste\n")
                 aciertos = 1 + aciertos
+                nmult += 1
             else:
                 print(f'\nFallaste, El resultado es: {solucion}\n')
                 errores = 1 + errores
-                
-            contador = 1 + contador
-            
+                nmult += 1
 
-        contador = 0
-            
-        pos = 1 + pos
+    result = resultados(aciertos, errores,nmult)
 
-    resultados(aciertos, errores)
-    # guardarpuntuacion(aciertos, errores, nombrepuntuacion, PuntuacionMultOrdenadas )
+    guardarpuntuacion("Multiplicaciones Varias", result)
 
+def calculo(num1):
 
-
-def calculo(num1, num2, nombrepuntuacion):
-
-    contador = 0
     aciertos = 0
     errores = 0
 
-    limite = int(input("cuantas multiplicaciones quieres hacer?"))
+    limite = None
+    while limite is None:       
+        try:
+            limite = int(input("cuantas multiplicaciones quieres hacer?"))  
+        except:
+            limite = None
 
-    while contador != limite:
+    
+    isRandom = None
+    while isRandom is None:
+        try:
+            isRandom = int(input("Quieres random? 1- si 0- no"))
+        except: 
+            isRandom = None
+
+    for i in range(1,limite+1):
             os.system("cls")
+            if isRandom:
+                num2 = rd.randint(1,10)
+            else:
+                num2 = i
             print(f'Cuanto es {num1} por {num2}:')
 
             try:
@@ -72,13 +99,11 @@ def calculo(num1, num2, nombrepuntuacion):
                 print("Has acertado")
                 input()
                 aciertos = aciertos + 1
-            elif resultado != num1 * num2:
+            else:
                 print(f"fallaste, el número era: {num1 * num2}")
                 input()
                 errores = errores + 1
-            contador = contador + 1
-            num2 = num2 + 1
-
-   # guardarpuntuacion(aciertos, errores, nombrepuntuacion, PuntuacionMultOrdenadas )
     
-    resultados(aciertos, errores)
+    result = resultados(aciertos, errores, limite)
+
+    guardarpuntuacion("Multiplicaciones", result)

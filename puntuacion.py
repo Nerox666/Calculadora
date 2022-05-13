@@ -1,38 +1,39 @@
+import json
+import os
+from menu import menu
 
-def guardarpuntuacion(aciertos, errores, nombrecampo, nombrepuntuacion):
-   json = ""
-   with open("puntuaciones.json" , "w") as fichero:
-         json = json.load(fichero)
-   
-   nombrepuntuacion
-   nombrepuntuacion = aciertos - errores
-   json[nombrecampo] = nombrepuntuacion
-
-
-
-def puntuaciones():
-
-    valoracionmult = ""
-    valoracionvariasmult= ""
-
+def leer():
     
-    if PuntuacionMult <= 4  :
-         valoracionmult = "Insuficiente, necesita practicar mucho" 
-    elif PuntuacionMult >= 8 :
-         valoracionmult = " Bastante bien un poco mas y lo saca"
-    elif PuntuacionMult == 10 :
-         valoracionmult = "Ha completado todo"
-    else:
-         valoracionmult = "bien, sigue así"
+    PuntuacionVariasTabs = 0
+    PuntuacionMult  = 0
+    with open("puntuaciones.json", "r") as f:
+        _dict:dict = json.load(f)
     
-    if PuntuacionVariasTabs <= 4  :
-        valoracionvariasmult = "Insuficiente, necesita practicar mucho" 
-    elif PuntuacionVariasTabs >= 8 :
-        valoracionvariasmult = " Bastante bien un poco mas y lo saca"
-    elif PuntuacionVariasTabs == 10 :
-        valoracionvariasmult = "Ha completado todo"
-    else:
-        valoracionvariasmult = "bien, sigue así"
+    for t, valor in _dict.items():
+        if t == "Multiplicaciones Varias":
+            PuntuacionVariasTabs = valor
+        else:
+            PuntuacionMult  = valor
+            
+    return PuntuacionMult,PuntuacionVariasTabs
+
+def guardarpuntuacion(nombrecampo, porcentaje):
+    
+    
+    _dict = {}
+    
+    with open ("puntuaciones.json", "r") as f:
+        _dict = json.load(f)
+
+    with open("puntuaciones.json", "w+") as f:
+        _dict[nombrecampo] = porcentaje
+        f.write(json.dumps(_dict))
+
+
+
+def puntuaciones(PuntuacionMult,PuntuacionVariasTabs):
+
+
 
 
     os.system("cls")
@@ -40,14 +41,9 @@ def puntuaciones():
     print("***************************************************")
     print("*****(es la diferencia entre errores y aciertos)***")
     print("---------------------------------------------------")
-    print(f"| conocimiento multiplicaciones:    {PuntuacionMult} |")
-    print(f"| conocimiento varias tablas: {PuntuacionVariasTabs}|")
+    print(f"| conocimiento multiplicaciones:    {PuntuacionMult}% |")
+    print(f"| conocimiento varias tablas: {PuntuacionVariasTabs}% |")
     print("---------------------------------------------------")
-    print("*******************Valoraciones********************")
-    print("----------------------------------------------------------------------------")
-    print(f"| conocimiento multiplicaciones: {valoracionmult} |")
-    print(f"| conocimiento varias tablas: {valoracionvariasmult}       |")
-    print("-----------------------------------------------------------------------------")
 
 
     op = input("pulsa r para salir y volver al menú")
